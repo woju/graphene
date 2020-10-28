@@ -5,7 +5,7 @@ import subprocess
 
 from . import Exec, which
 
-AB = shlex.split(os.getenv('AB', 'ab -dSqk http://127.0.0.1:8002/random/10K.1.html'))
+AB = shlex.split(os.getenv('AB', 'ab -dSqk -n 10000 http://127.0.0.1:8002/random/10K.1.html'))
 NGINX = shlex.split(os.getenv('NGINX', 'nginx -p {} -c nginx.conf'.format(
     shlex.quote(os.fspath(pathlib.Path(os.getenv('ASV_CONF_DIR')) / 'benchmarks')))))
 
@@ -13,7 +13,8 @@ def _parse_line(line):
     return line.split(':', maxsplit=1)[1].strip().split(maxsplit=1)[0]
 
 def _run_ab(metric, concurrency):
-    proc = subprocess.run([*AB, '-c', str(concurrency)], check=True, stdout=subprocess.PIPE)
+    proc = subprocess.run([*AB[:-1], '-c', str(concurrency), AB[-1]],
+        check=True, stdout=subprocess.PIPE)
 
     found_failed = False
     ret = None
