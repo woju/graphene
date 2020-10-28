@@ -43,12 +43,12 @@ class Nginx:
 
     def track_native(self, metric, concurrency):
         with self.nginx.native_server(*NGINX[1:]):
-            return _run_ab(metric, concurrency)
+            return _run_ab(self._metric[metric], concurrency)
 
     def track_graphene_nosgx(self, metric, concurrency):
         with self.nginx.graphene_server(*NGINX[1:], sgx=False):
-            return _run_ab(metric, concurrency)
+            return _run_ab(self._metric[metric], concurrency)
 
     def track_graphene_sgx(self, metric, concurrency):
         with self.nginx.graphene_server(*NGINX[1:], sgx=True):
-            return _run_ab(metric, concurrency)
+            return _run_ab(self._metric[metric], concurrency)
