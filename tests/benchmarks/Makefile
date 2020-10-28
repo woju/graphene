@@ -7,6 +7,7 @@ BENCHMARKS = \
 GRAPHENEDIR = $(abspath $(dir $(lastword $(MAKEFILE_LIST)))/../..)
 
 all: $(BENCHMARKS)
+	$(MAKE) -C http-root $@
 
 $(filter write_%,$(BENCHMARKS)): %: write_pages.c
 	$(CC) $(CFLAGS) $< -o $@
@@ -17,4 +18,5 @@ write_1e7 : CFLAGS += -DPAGECOUNT=10000000
 
 .PHONY: clean
 clean:
+	$(MAKE) -C http-root $@
 	$(RM) $(BENCHMARKS)
